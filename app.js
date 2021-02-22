@@ -1,8 +1,7 @@
 'use strict';
+
 import {beerList} from "./beers.js";
-// beerList.forEach(element => {
-//     console.log(element)
-// });
+
 function elsoFeladat(){
 
     let solution=[];
@@ -82,7 +81,81 @@ function elsoFeladat(){
     megoldas.forEach((item)=>{
         megoldasNévVagyNevek.push(item.brand)
     });
-    
+
     return megoldasNévVagyNevek;
 })();
+
+
+(function otodikFeladat(){
+    let a =elsoFeladat();
+    let sumOfRatio=0;
+
+    for (let index = 0; index < beerList.length; index++) {
+        for (let y = 0; y < beerList[index].ingredients.length; y++) {
+            let currentRatio= beerList[index].ingredients[y].ratio;
+            sumOfRatio=sumOfRatio+parseFloat(currentRatio);
+            
+        }
+        sumOfRatio= 1-sumOfRatio;
+        beerList[index]['sumOfRatio']=sumOfRatio;
+        //console.log(sumOfRatio)
+        sumOfRatio=0;
+        
+    }
+    //az eredeti sorrend megtartása
+    let megoldas = JSON.parse(JSON.stringify(beerList));
+    megoldas.sort(function(a, b) {
+        return b.sumOfRatio - a.sumOfRatio;
+      });
+    //console.log(megoldas)
+
+    return megoldas;
+})();
+
+
+(function hatodikFeladat(){
+    let megoldas = new Map();
+    
+    //uniquePrices
+    let prices = [];
+    beerList.forEach((item)=>{
+         if (!prices.includes(item.price)) {
+             prices.push(item.price)
+         }
+    });
+    //sorba rendezés
+    prices.sort((a,b)=>{
+        return b-a;
+    });
+
+    let currentHoundred=0;
+    let köztes = 0;
+    let justDoIt=prices.length;
+    let vlmi=[];
+    do {
+        vlmi=[];
+        currentHoundred= Math.ceil(prices[justDoIt] / 100) * 100;
+        beerList.forEach(element => {
+            if (element.price==prices[justDoIt]) {
+                vlmi.push(element)
+            }
+        });
+        if (currentHoundred) {
+            if (megoldas.has(currentHoundred)) {
+                //nem kell uj ertek
+                
+                köztes = megoldas.get(currentHoundred).push(vlmi)
+            }
+            else{
+                megoldas.set(currentHoundred,vlmi)
+    
+    
+            }
+        }
+        justDoIt=justDoIt-1;
+    } while (justDoIt);   
+      console.log(megoldas)
+
+})();
+
 

@@ -780,4 +780,4 @@
       "isCan": false
     }
   ];
- export {beerList}
+ export {beerList};
